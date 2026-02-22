@@ -1,59 +1,86 @@
-import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
-
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
-
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
+import { Tabs } from "expo-router";
+import { BookOpen, Calendar, Home, User } from "lucide-react-native";
+import { StyleSheet, View } from "react-native";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
-      }}>
+        headerShown: false,
+        tabBarActiveTintColor: "#5653FC",
+        tabBarInactiveTintColor: "#717680",
+        tabBarLabelPosition: "below-icon",
+        tabBarStyle: {
+          backgroundColor: "#FFFFFF",
+          borderTopWidth: 1,
+          borderTopColor: "#F5F5F5",
+          height: 87,
+          paddingTop: 12,
+          paddingBottom: 12,
+          maxWidth: 400,
+          width: "100%",
+          alignSelf: "center",
+          shadowColor: "rgba(0, 0, 0, 0.04)",
+          shadowOffset: { width: 0, height: -4 },
+          shadowRadius: 16,
+          elevation: 10,
+        },
+        tabBarLabelStyle: {
+          fontFamily: "Inter",
+          fontSize: 12,
+          fontWeight: "400",
+          marginTop: 6,
+        },
+      }}
+    >
+      <Tabs.Screen
+        name="home"
+        options={{
+          title: "Home",
+          tabBarIcon: ({ color }) => <Home color={color} size={24} />,
+        }}
+      />
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
+          title: "Rooster",
+          tabBarIcon: ({ color }) => (
+            <View style={styles.activeContainer}>
+              <View style={styles.activeIndicator} />
+              <Calendar color={color} size={24} />
+            </View>
           ),
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="publications"
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "Publications",
+          tabBarIcon: ({ color }) => <BookOpen color={color} size={24} />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color }) => <User color={color} size={24} />,
         }}
       />
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  activeContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: 81.75,
+  },
+  activeIndicator: {
+    width: 64,
+    height: 4,
+    backgroundColor: "#5653FC",
+    borderBottomLeftRadius: 4,
+    borderBottomRightRadius: 4,
+  },
+});
