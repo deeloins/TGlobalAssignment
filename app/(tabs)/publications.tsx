@@ -47,7 +47,7 @@ const PUBLICATIONS = [
 ];
 
 export default function PublicationsScreen() {
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontError] = useFonts({
     Manrope_400Regular,
     Manrope_500Medium,
     Manrope_600SemiBold,
@@ -55,8 +55,23 @@ export default function PublicationsScreen() {
     Inter_400Regular,
   });
 
-  if (!fontsLoaded) {
-    return null;
+  if (!fontsLoaded && !fontError) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading fonts...</Text>
+      </View>
+    );
+  }
+
+  if (fontError) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>
+          Error loading fonts. Install: npm install @expo-google-fonts/manrope
+          @expo-google-fonts/inter expo-font
+        </Text>
+      </View>
+    );
   }
 
   return (
@@ -68,10 +83,7 @@ export default function PublicationsScreen() {
           </View>
           <Text style={styles.subHeaderText}>Start exploring publications</Text>
         </View>
-        <Image
-          source={require("@/assets/images/male doctor.svg")}
-          style={styles.headerAvatar}
-        />
+        <View style={styles.headerAvatar} />
       </View>
 
       <View style={styles.searchFrame}>
@@ -90,7 +102,11 @@ export default function PublicationsScreen() {
         {PUBLICATIONS.map((pub) => (
           <View key={pub.id} style={styles.pubCard}>
             <View style={styles.imageWrapper}>
-              <Image source={pub.image} style={styles.cardImage} />
+              {pub.image ? (
+                <Image source={pub.image} style={styles.cardImage} />
+              ) : (
+                <View style={styles.cardImage} />
+              )}
               <View style={styles.imageOverlay} />
             </View>
 
@@ -114,7 +130,11 @@ export default function PublicationsScreen() {
               </View>
 
               <View style={styles.authorRow}>
-                <Image source={pub.authorImage} style={styles.authorAvatar} />
+                {pub.authorImage ? (
+                  <Image source={pub.authorImage} style={styles.authorAvatar} />
+                ) : (
+                  <View style={styles.authorAvatar} />
+                )}
                 <View style={styles.authorMeta}>
                   <Text style={styles.authorName}>{pub.author}</Text>
                   <View style={styles.metaFrame}>
@@ -192,33 +212,26 @@ const styles = StyleSheet.create<Styles>({
     marginTop: 20,
   },
   headerTextGroup: {
+    flex: 1,
     flexDirection: "column",
     alignItems: "flex-start",
     padding: 0,
-    gap: 8,
-    width: 302,
-    height: 52,
+    gap: 4,
   },
   headerTitleRow: {
     flexDirection: "row",
     alignItems: "center",
     padding: 0,
     gap: 4,
-    width: 302,
-    height: 24,
   },
   welcomeText: {
-    width: 190,
-    height: 24,
     fontFamily: "Manrope_700Bold",
     fontSize: 24,
-    lineHeight: 24,
+    lineHeight: 28,
     letterSpacing: -0.48,
     color: "#242424",
   },
   subHeaderText: {
-    width: 302,
-    height: 20,
     fontFamily: "Inter_400Regular",
     fontSize: 14,
     lineHeight: 20,
@@ -230,6 +243,7 @@ const styles = StyleSheet.create<Styles>({
     borderWidth: 1.42857,
     borderColor: "#F6FAFD",
     borderRadius: 285.714,
+    backgroundColor: "#E5E7EB",
   },
   searchFrame: {
     flexDirection: "column",
@@ -298,6 +312,7 @@ const styles = StyleSheet.create<Styles>({
     width: 319,
     height: 169,
     borderRadius: 8,
+    backgroundColor: "#E5E7EB",
   },
   imageOverlay: {
     ...StyleSheet.absoluteFillObject,
@@ -403,6 +418,7 @@ const styles = StyleSheet.create<Styles>({
     width: 32,
     height: 32,
     borderRadius: 228.571,
+    backgroundColor: "#E5E7EB",
   },
   authorMeta: {
     flexDirection: "column",
